@@ -7,18 +7,18 @@ import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
 import { AuthMiddleware } from './auth/auth.middleware';
 import { JwtService } from './jwt/jwt.service';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import config from './config';
 
 @Module({
   imports: [
-    TypeOrmModule.forRoot({
-      type: 'mysql',
-      host: 'localhost',
-      port: 3306,
-      username: 'root',
-      password: 'somethingbig',
-      database: 'api-haciendola',
-      entities: [__dirname + '/**/*.entity{.ts,.js}'],
-      synchronize: true,
+    ConfigModule.forRoot({
+      load: [config],
+      isGlobal: true,
+    }),
+    TypeOrmModule.forRootAsync({
+      useFactory: async (configService: ConfigService) => configService.get('database'),
+      inject: [ConfigService],
     }),
     ProductsModule,
     UsersModule,
@@ -31,11 +31,11 @@ import { JwtService } from './jwt/jwt.service';
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
     consumer
-    .apply(AuthMiddleware)
-    .exclude(
-      { path: 'auth/login', method: RequestMethod.POST },
-      { path: 'users', method: RequestMethod.POST }
-    )
-    .forRoutes('*');
+      .apply(AuthMiddleware)
+      .exclude(
+        { path: 'auth/login', method: RequestMethod.POST },
+        { path: 'users', method: RequestMethod.POST }
+      )
+      .forRoutes('*');
   }
 }
