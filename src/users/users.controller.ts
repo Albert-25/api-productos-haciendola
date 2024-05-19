@@ -1,39 +1,98 @@
-import { Controller, Get, Post, Body, Param, Put, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Put, Delete, NotFoundException, Req, UnauthorizedException } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { User } from './entities/user.entity';
 
 @Controller('users')
 export class UsersController {
-  constructor(private readonly usersService: UsersService) {}
+  constructor(private readonly usersService: UsersService) { }
 
   @Post()
-  create(@Body() createUserDto: CreateUserDto) {
-    return this.usersService.create(createUserDto);
+  async create(@Body() createUserDto: CreateUserDto) {
+    try {
+      return await this.usersService.create(createUserDto);
+    } catch (error) {
+      console.log(error)
+      throw error;
+    }
   }
 
   @Get()
-  findAll() {
-    return this.usersService.findAll();
+  async findAll() {
+    try {
+      return await this.usersService.findAll();
+    } catch (error) {
+      console.log(error)
+      throw error;
+    }
+  }
+
+  @Get('me')
+  async getLoggedInUser(@Req() req): Promise<User> {
+    try {
+      if (!req.user) {
+        throw new UnauthorizedException('Usuario no autenticado');
+      }
+      return req.user;
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.usersService.findOne(+id);
+  async findOne(@Param('id') id: string) {
+    try {
+      const user = await this.usersService.findOne(+id);
+      if (!user) {
+        throw new NotFoundException('Usuario no encontrado');
+      }
+      return user;
+    } catch (error) {
+      console.log(error)
+      throw error;
+    }
   }
 
   @Get('search/:userNameOrEmail')
-  findByUserNameOrEmail(@Param('userNameOrEmail') userNameOrEmail: string) {
-    return this.usersService.findByUserNameOrEmail(userNameOrEmail);
+  async findByUserNameOrEmail(@Param('userNameOrEmail') userNameOrEmail: string) {
+    try {
+      return await this.usersService.findByUserNameOrEmail(userNameOrEmail);
+    } catch (error) {
+      console.log(error)
+      throw error;
+    }
   }
 
   @Put(':id')
-  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-    return this.usersService.update(+id, updateUserDto);
+  async update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
+    try {
+      return await this.usersService.update(+id, updateUserDto);
+    } catch (error) {
+      console.log(error)
+      throw error;
+    }
+  }
+
+  @Put('change-password/:id')
+  async changePassword(@Param('id') id: string, @Body() passwordData: { currentPassword: string, newPassword: string }) {
+    try {
+      const { currentPassword, newPassword } = passwordData;
+      return await this.usersService.changePassword(+id, currentPassword, newPassword);
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.usersService.remove(+id);
+  async remove(@Param('id') id: string) {
+    try {
+      return await this.usersService.remove(+id);
+    } catch (error) {
+      console.log(error)
+      throw error;
+    }
   }
 }

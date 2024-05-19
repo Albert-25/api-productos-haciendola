@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Param, Put, Delete, Request } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Put, Delete, Request, NotFoundException } from '@nestjs/common';
 import { Request as ExpressRequest } from 'express';
 import { ProductsService } from './products.service';
 import { Product } from './entities/product.entity';
@@ -10,27 +10,57 @@ export class ProductsController {
   constructor(private readonly productsService: ProductsService) {}
 
   @Get()
-  findAll(@Request() req: ExpressRequest): Promise<Product[]> {
-    return this.productsService.findAll();
+  async findAll(@Request() req: ExpressRequest): Promise<Product[]> {
+    try {
+      return await this.productsService.findAll();
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string): Promise<Product> {
-    return this.productsService.findOne(+id);
+  async findOne(@Param('id') id: string): Promise<Product> {
+    try {
+      const product = await this.productsService.findOne(+id);
+      if (!product) {
+        throw new NotFoundException('Producto no encontrado');
+      }
+      return product;
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
   }
 
   @Post()
   async create(@Body() createProductDto: CreateProductDto): Promise<Product> {
-    return this.productsService.create(createProductDto);
+    try {
+      return await this.productsService.create(createProductDto);
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
   }
 
   @Put(':id')
   async update(@Param('id') id: string, @Body() updateProductDto: UpdateProductDto): Promise<Product> {
-    return this.productsService.update(+id, updateProductDto);
+    try {
+      return await this.productsService.update(+id, updateProductDto);
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
   }
   
   @Delete(':id')
-  remove(@Param('id') id: string): Promise<Object> {
-    return this.productsService.remove(+id);
+  async remove(@Param('id') id: string): Promise<Object> {
+    try {
+      const deletedId = await this.productsService.remove(+id);
+      return { deletedId };
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
   }
 }

@@ -1,11 +1,11 @@
 import { IsNotEmpty, IsString } from 'class-validator';
 
 export class AuthLoginRequestDto {
-  @IsNotEmpty()
-  @IsString()
+  @IsNotEmpty({ message: 'El usuario no puede estar vacío' })
+  @IsString({ message: 'El usuario debe ser una cadena' })
   userNameOrEmail: string;
 
-  @IsNotEmpty()
-  @IsString()
+  @IsNotEmpty({ message: 'La contraseña no puede estar vacía' })
+  @IsString({ message: 'La contraseña debe ser una cadena' })
   password: string;
 }
