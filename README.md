@@ -7,13 +7,11 @@ Este proyecto es una API construida con TypeScript, NestJS, MySQL, Typeorm y JWT
 1. **Configuración de las credenciales de la base de datos:**
 - En la ruta raíz del proyecto, crea un archivo llamado `.env` donde colocarás las credenciales de tu base de datos. El contenido del archivo `.env` debe ser similar a esto:
 
-
     - DATABASE_HOST=localhost
     - DATABASE_PORT=3306
     - DATABASE_USERNAME=root
     - DATABASE_PASSWORD=mypassword
     - DATABASE_NAME=mydbname
-
 
 1. **Instalación de dependencias:**
 - Asegúrate de tener Node.js instalado en tu sistema y usar la version indicada en el archivo .nvmrc
