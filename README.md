@@ -1,25 +1,3 @@
-# api-productos-haciendola
-
-*instructiones a seguir para levantar el backend*:
-
-0. En la ruta raiz del proyecto se debe crear el archivo ".env" en el cual irán las credenciales de la db
-
-DATABASE_HOST=localhost
-DATABASE_PORT=3306
-DATABASE_USERNAME=root
-DATABASE_PASSWORD=mypassword
-DATABASE_NAME=mydbname
-
-1. En la misma ruta usar la version correspondiente de Node con el comando "nvm use" y luego ejecutar "npm install" 
-
-2. Instalar NestJS con el comando "npm install -g @nestjs/cli" 
-
-3. Seguidamente, ejecutar el comando "npm run start:dev" para levantar la api en el puerto 3001
-
-
-
-
-
 # API de Productos - Backend
 
 Este proyecto es una API construida con TypeScript, NestJS, MySQL, Typeorm y JWT para la gestión de productos.
