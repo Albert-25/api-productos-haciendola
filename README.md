@@ -4,7 +4,7 @@ Este proyecto es una API construida con TypeScript, NestJS, MySQL, Typeorm y JWT
 
 ## Instrucciones para levantar el backend
 
-1. **Configuración de las credenciales de la base de datos:**
+0. **Configuración de las credenciales de la base de datos:**
 - En la ruta raíz del proyecto, crea un archivo llamado `.env` donde colocarás las credenciales de tu base de datos. El contenido del archivo `.env` debe ser similar a esto:
 
     ```
